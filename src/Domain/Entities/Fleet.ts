@@ -1,18 +1,20 @@
 import Vehicle from "./Vehicle";
+import Location_ from "./Location"
+import { stringify } from "querystring";
+import { log } from "console";
 
 
-
-class Fleet {
+export default class Fleet{
     private id: string;
     private name: string;
-    private vehicles: Vehicle[];
-    private location: Location_
+    private tabVehicles: Array<Vehicle> = []; 
+    private location : Location_ ; 
+    
   
-    constructor(id: string, name: string, vehicles: Vehicle[], location: Location_) {
+    constructor(id: string, name: string,  latitude: number, longitude: number) {
+      this.location = new Location_(latitude, longitude)
       this.id = id;
       this.name = name;
-      this.vehicles = vehicles;
-      this.location = location
     }
   
     // Getters
@@ -23,21 +25,48 @@ class Fleet {
     public getName(): string {
       return this.name;
     }
-  
-    public getVehicles(): Vehicle[] {
-      return this.vehicles;
+
+    public getLocation(): Location_ {
+      return this.location;
     }
   
-    // Add a vehicle to the fleet
-    public addVehicle(vehicle: Vehicle): void {
-      this.vehicles.push(vehicle);
+    public getVehicles(): Array<Vehicle> {
+      return this.tabVehicles;
     }
+  
+  // Add a vehicle to the fleet
+  public addVehicle(vehicle: Vehicle): string {
+    //On ajoute le vehicule que si il n'existe pas dans la flotte
+    const tabFiltervehicle =  this.tabVehicles.filter(v => v.getId() === vehicle.getId());
+    if (tabFiltervehicle.length > 0) {
+      return "ko";
+    }
+    // on maj la localisation en cours du vehicule
+    vehicle.setCurrentLocation(this.location.getLatitude(), this.location.getLongitude())
+    //on ajoute le véhicule à la flotte
+    this.tabVehicles.push(vehicle);
+    // On ajoute la flotte encours à la flotte du vehicule
+    vehicle.setMyFleets(this)
+    return "ok";
+  }
   
     // Remove a vehicle from the fleet
     public removeVehicle(vehicle: Vehicle): void {
-      const index = this.vehicles.findIndex(v => v.getId() === vehicle.getId());
+      const index = this.tabVehicles.findIndex(v => v.getId() === vehicle.getId());
       if (index !== -1) {
-        this.vehicles.splice(index, 1);
+        this.tabVehicles.splice(index, 1);
       }
     }
+
+        //trouve un  Vehicle par son id
+        public findVehicleById (vehicle:Vehicle)  {
+          const index = this.tabVehicles.findIndex(v => v.getId() === vehicle.getId());
+          return index;
+        }
+    
+        public findVehiculeByBrand(vehiculeBrand:string){
+          const newTabVehicles = this.tabVehicles.filter(v => v.getBrand() === vehiculeBrand)
+          return newTabVehicles; 
+        }
+    
   }

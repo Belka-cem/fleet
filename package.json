@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "license": "proprietary",
   "devDependencies": {
-    "@cucumber/cucumber": "^8.3.0",
+    "@cucumber/cucumber": "^8.11.1",
     "@types/cucumber": "^6.0.1",
     "@types/node": "^14.0.27",
+    "ncp": "^2.0.0",
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "test": "cucumber-js --profile default"
+    "test": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features"
   }
 }

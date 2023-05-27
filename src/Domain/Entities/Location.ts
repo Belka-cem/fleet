@@ -1,8 +1,8 @@
-class Location_ {
+export default class Location_ {
     private latitude: number;
     private longitude: number;
   
-    constructor(latitude: number, longitude: number) {
+    constructor(latitude: number = -1, longitude: number = -1) {
       this.latitude = latitude;
       this.longitude = longitude;
     }
@@ -24,4 +24,5 @@ class Location_ {
     public setLongitude(longitude: number): void {
       this.longitude = longitude;
     }
+
   }
