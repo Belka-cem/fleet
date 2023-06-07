@@ -11,5 +11,10 @@
   },
   "scripts": {
     "test": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features"
+  },
+  "dependencies": {
+    "commander": "^10.0.1",
+    "dotenv": "^16.1.4",
+    "mongodb": "^5.6.0"
   }
 }
