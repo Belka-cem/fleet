@@ -1,20 +1,18 @@
 
 import { MongoClient, Db } from 'mongodb';
+import * as dotenv from "dotenv";
 
 export default class MongoDB {
-    private url: string;
+    private url?: string;
     private client?: MongoClient;
     private db?: Db ; 
   
-    constructor(url: string) {
-      this.url = url;
-    
-    }
-  
-    async connect(): Promise<void> {
+
+    private async connect(): Promise<void> {
       try {
-        this.client = await MongoClient.connect(this.url);
-        this.db = this.client.db();
+        //this.client = await MongoClient.connect(this.url);
+        this.client = new MongoClient (this.url!);
+        this.db = this.client.db(process.env.DB_NAME);
         console.log('Connexion réussie à MongoDB');
       } catch (error) {
         console.error('Erreur lors de la connexion à MongoDB :', error);
@@ -22,17 +20,29 @@ export default class MongoDB {
       }
     }
   
-    getDb(): Db {
-      if (!this.db) {
-        throw new Error('La connexion à la base de données MongoDB n\'a pas été établie.');
+    async getDb(): Promise<Db> {
+
+      try {
+        // Singleton sur la connexion 
+        if (!this.db) {
+          dotenv.config();
+          this.url = !process.env.DB_CONN_STRING ? "" : process.env.DB_CONN_STRING; 
+          this.connect();
+        }
+        return this.db!;
+      } catch (error) {
+        console.error('Erreur lors de la connexion à MongoDB :', error);
+        throw error;
       }
-      return this.db;
+      
     }
   
-    async disconnect(): Promise<void> {
+    private async disconnect(): Promise<void> {
       if (this.client) {
         await this.client.close();
         console.log('Déconnexion réussie de MongoDB');
       }
     }
   }
+
+

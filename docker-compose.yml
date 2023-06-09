@@ -1,0 +1,32 @@
+version: "3.7"
+volumes:
+  vol_mongo:
+    external: true
+services:
+  mongodb:
+    container_name: mongo-dev
+    image: mongo
+    volumes:
+        - vol_mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_DATABASE=auth
+      - MONGO_INITDB_ROOT_PASSWORD=fleet
+    ports:
+      - '27017:27017'
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    depends_on:
+      - mongodb
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=fleet
+      - ME_CONFIG_MONGODB_SERVER=mongo-dev
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=fleet
+    ports:
+      - '8084:8081'
+
+
