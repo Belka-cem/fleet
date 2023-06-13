@@ -1,7 +1,8 @@
 import Vehicle from "./Vehicle";
 import Location_ from "./Location"
 import { stringify } from "querystring";
-import { log } from "console";
+import { Console, log } from "console";
+import FleetDTO from "../../Infra/DTO/fleet.dto";
 
 
 export default class Fleet{
@@ -10,12 +11,17 @@ export default class Fleet{
     private tabVehicles: Array<Vehicle> = []; 
     private location : Location_ ; 
     
-  
+    // Contructeur classique
     constructor(id: string, name: string,  latitude: number, longitude: number) {
       this.location = new Location_(latitude, longitude)
       this.id = id;
       this.name = name;
     }
+
+        // On créée la classe à partie du dto
+        static createDefault(fleetDto:FleetDTO):Fleet {
+          return  new Fleet(fleetDto.id, fleetDto.name, fleetDto.locations.latitude, fleetDto.locations.longitude)
+        }
   
     // Getters
     public getId(): string {

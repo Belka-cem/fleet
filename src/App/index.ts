@@ -1,44 +1,40 @@
-import { Command } from 'commander';
+#!/usr/bin/env node
+import { Command, Option } from 'commander';
 import Fleet from '../Domain/Entities/Fleet';
 import { createFleet } from './commands/CreateFleetCommand';
-import FleetDTO from '../Infra/DTO/fleet.dto';
-import MongoDB from '../Infra/MongoDb';
-import FleetServiceBDD from '../Infra/services/fleet';
+import { registerVehicle } from './commands/AddVehicleCommand';
+
 
 
 const program = new Command();
 
+// Création d'une flote
 program
   .command('create')
   .description('Create a fleet')
-  .option('-i, --id <id>', 'User ID')
+  .requiredOption('-i, --id <id>', 'User ID')
   .option('-n, --name <name>', 'Fleet name')
   .option('-lt, --latitude <latitude>', 'latitude location')
   .option('-lg, --longitude <longitude>', 'longitude location')
-  .action(async(id, name, latitude, longitude) => {
-    const fleetId = await handleCommand('create', { id, name, latitude, longitude });
+  .action(async (options) => {
+    //console.log("init", options.id, options.name, options.latitude, options.longitude);
+     await handleCommand('create', options);
+    
   });
 
 
-
+// Enregistrer un véhicule
 program
   .command('register-vehicle')
   .description('Add a new vehicle to the fleet')
-  .option('-fi, --fleet <fleetId>', 'Fleet id')
-  .option('-vi, --vehicle <vehicleId>', 'Vehicle id')
-
-  .option('-y, --year <year>', 'Vehicle year')
-  .action((fleetId, vehicleId) => {
-    handleCommand('register-vehicle', { fleetId, vehicleId });
+  .requiredOption('-fi, --fleet <fleetId>', 'Fleet id')
+  .requiredOption('-vi, --vehicle <vehicleId>', 'Vehicle id')
+  .action(async(options) => {
+    await handleCommand('register-vehicle', options);
   });
 
-  // program
-  // .command('register-vehicle <fleetId> <vehiclePlateNumber>')
-  // .description('Register a vehicle')
-  // .action((fleetId, vehiclePlateNumber) => {
-  //   handleCommand('register-vehicle', { fleetId, vehiclePlateNumber });
-  // });
 
+  //Localiser un Véhicule
 program
   .command('localize-vehicle <fleetId> <vehiclePlateNumber> <lat> <lng> [alt]')
   .description('Localize a vehicle')
@@ -53,35 +49,28 @@ async function handleCommand(command:string, options:any) {
     case 'create':
       console.log('commande create');
       
-      const { id, name, latitude, longitude } = options;
-      // Init Fleet
+      let { id, name, latitude, longitude } = options;
+     
+      //Optionnel
+      if (!name) name = "Random Fleet"; 
+      if (!latitude) latitude = 43.296174; 
+      if (!longitude) longitude = 5.369953; 
+
+
+      //Init Fleet
       const fleet = new Fleet(id, name, latitude, longitude );
-      console.log('new fleet ok');
-      // AJout de la flote à la bdd
-      // const idFleet = await createFleet(fleet);
-      // console.log("id fleet : ", idFleet); 
-      const fleetDTo : FleetDTO = {
-        id : fleet.getId(), 
-        name: fleet.getName(),
-        vehicles: [],
-        locations : {longitude: fleet.getLocation().getLongitude(), latitude: fleet.getLocation().getLatitude() }
-
-      }
-      console.log("fleetDTo createFleet",fleetDTo.locations);
-      
-      const db = await new MongoDB().getDb() ; 
-      const fleetServiceBdd = new FleetServiceBDD(db); 
-      const idFleet = await fleetServiceBdd.addFleet(fleetDTo);
-      console.log("idFleet ok", idFleet); 
-    
-
-      break
+      console.log('new fleet ok', fleet.getLocation());
+      //AJout de la flote à la bdd
+      const idFleet = await createFleet(fleet);
+      console.log("id fleet : ", idFleet); 
+      process.exit(0);
 
     case 'register-vehicle':
       // enregistrer un véhicule dans une flotte
-      //registerVehicle(options.fleetId, options.vehicleId);
-      console.log(`Véhicule ${options.vehicleId} est ajouté à la flotte ${options.fleetId}`);
-      break;
+      await registerVehicle(options.fleet, options.vehicle);
+      console.log(`options`, options);
+      console.log(`Véhicule ${options.vehicle} est ajouté à la flotte ${options.fleet}`);
+      process.exit(0);
 
     // case 'localize-vehicle':
     //   localiser un véhicule dans une flotte
@@ -90,6 +79,6 @@ async function handleCommand(command:string, options:any) {
 
     default:
       console.error('Invalid command');
-      break;
+      process.exit(1);
   }
 }

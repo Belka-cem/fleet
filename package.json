@@ -12,7 +12,7 @@
   "scripts": {
     "test": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features",
     "build": "npx tsc", 
-    "fleet" : "node ./dist/src/App/index.js"
+    "fleet" : " node ./dist/src/App/index.js"
   },
   "dependencies": {
     "commander": "^10.0.1",
