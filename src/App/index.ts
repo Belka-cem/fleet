@@ -3,7 +3,7 @@ import { Command, Option } from 'commander';
 import Fleet from '../Domain/Entities/Fleet';
 import { createFleet } from './commands/CreateFleetCommand';
 import { registerVehicle } from './commands/AddVehicleCommand';
-
+import { addVehicle} from './commands/CreateVehicleCommand'
 
 
 const program = new Command();
@@ -22,8 +22,23 @@ program
     
   });
 
+  program
+  .command('create-vehicle')
+  .description('Create a vehicle')
+  .requiredOption('-i, --id <id>', 'Id')
+  .requiredOption('-b, --brand <Brand>', 'Brand')
+  .requiredOption('-m, --model <Model>', 'Model')
+  .requiredOption('-y, --year <Year>', 'Year')
+  .requiredOption('-t, --type <Type>', 'Type')
+  .requiredOption('-lt, --latitude <latitude>', 'latitude location')
+  .requiredOption('-lg, --longitude <longitude>', 'longitude location')
+  .action((options) => {
+    handleCommand('create-vehicle', options);
+  });
 
-// Enregistrer un véhicule
+
+
+// Enregistrer un véhicule existant à une flotte
 program
   .command('register-vehicle')
   .description('Add a new vehicle to the fleet')
@@ -37,6 +52,14 @@ program
   //Localiser un Véhicule
 program
   .command('localize-vehicle <fleetId> <vehiclePlateNumber> <lat> <lng> [alt]')
+  .description('Localize a vehicle')
+  .action((fleetId, vehiclePlateNumber, lat, lng, alt) => {
+    handleCommand('localize-vehicle', { fleetId, vehiclePlateNumber, lat, lng, alt });
+  });
+
+
+program
+  .command('add-vehicle <fleetId> <vehiclePlateNumber> <lat> <lng> [alt]')
   .description('Localize a vehicle')
   .action((fleetId, vehiclePlateNumber, lat, lng, alt) => {
     handleCommand('localize-vehicle', { fleetId, vehiclePlateNumber, lat, lng, alt });
@@ -68,14 +91,20 @@ async function handleCommand(command:string, options:any) {
     case 'register-vehicle':
       // enregistrer un véhicule dans une flotte
       await registerVehicle(options.fleet, options.vehicle);
-      console.log(`options`, options);
-      console.log(`Véhicule ${options.vehicle} est ajouté à la flotte ${options.fleet}`);
+      //console.log(`Véhicule ${options.vehicle} est ajouté à la flotte ${options.fleet}`);
       process.exit(0);
 
     // case 'localize-vehicle':
     //   localiser un véhicule dans une flotte
     //   localizeVehicle(options.fleetId, options.vehiclePlateNumber, options.lat, options.lng, options.alt);
     //   break;
+
+    case 'create-vehicle':
+      // Céer un vehicule
+      console.log("options", options);
+      
+      await addVehicle(options.id, options.brand, options.model, options.year, options.type, options.lat, options.longitude);
+      process.exit(0);
 
     default:
       console.error('Invalid command');

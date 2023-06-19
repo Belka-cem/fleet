@@ -2,6 +2,7 @@
 import { Collection, Db, ObjectId } from 'mongodb';
 import FleetDTO from '../DTO/fleet.dto';
 import VehicleDTO from '../DTO/vehicle.dto';
+import { log } from 'console';
 
 export default class FleetServiceBDD {
 
@@ -35,7 +36,6 @@ export default class FleetServiceBDD {
         //const collections: { fleetC: Collection } = fleet ;
         try {
             const query = { id: fleetId };
-            console.log("query", query);
             
             const fleet = await this.fleetCollection.findOne(query) ;
             
@@ -53,22 +53,20 @@ export default class FleetServiceBDD {
         
     }
 
-    async addVehicle(fleetId:string, vehicleDto:VehicleDTO): Promise<FleetDTO> {
+    async addVehicle(fleetDto:FleetDTO, vehicleDto?:VehicleDTO ){
 
-        //const collections: { fleetC: Collection } = fleet ;
         try {
-            const query = { id: fleetId };
-            console.log("query", query);
+            // si le véhiculeest nul on considère qu'il faut l'ajouter à la flotte
+            if (vehicleDto){
+                fleetDto.vehicles = [...fleetDto.vehicles, vehicleDto]; 
+            } 
+            const query = { id: fleetDto.id };
             
-            const fleet = await this.fleetCollection.findOne(query) ;
+            const res = await this.fleetCollection.updateOne(query, {vehiles:fleetDto.vehicles}) ;
+            console.log("res", res);
             
-            const fleetDto: FleetDTO = {
-                id: fleet!.id, 
-                name: fleet!.name,
-                vehicles: fleet!.vehicles, 
-                locations: { longitude: fleet!.longitude, latitude: fleet!.latitude}
-            }        
-            return fleetDto;
+            if (!res) throw new Error("Problème lors de l'ajout du véhicule");
+     
         } catch (error) {
             console.log(error);
             throw error;

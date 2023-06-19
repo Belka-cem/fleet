@@ -13,7 +13,7 @@ export default class VehicleServiceBDD {
         this.fleetCollection = db.collection("vehicle");
     }
 
-    async addFleet(vehicle:VehicleDTO): Promise<string> {
+    async addVehcile(vehicle:VehicleDTO): Promise<string> {
         try {
             const result = await this.fleetCollection.insertOne(vehicle);
             console.log("result", result);
@@ -25,15 +25,28 @@ export default class VehicleServiceBDD {
         
     }
 
-    async getFleet(vehicleId:string): Promise<VehicleDTO> {
+    async updateVehicle(vehicle:VehicleDTO):Promise<void> {
+        try {
+            const result = await this.fleetCollection.updateOne({id: vehicle.id}, vehicle);
+            console.log("result", result);
+            if(!result) throw new Error("Error lors de la maj du véhicule : " + vehicle.id)
+            
+        } catch (error) {
+            //console.log(error);
+            throw error;
+        }
+    }
+
+    async getVehicle(vehicleId:string): Promise<VehicleDTO> {
 
         //const collections: { fleetC: Collection } = fleet ;
         try {
             const query = { id: vehicleId };
-            console.log("query", query);
             
             const vehicle = await this.fleetCollection.findOne(query) ;
+            console.log("vehicle", vehicle);
             
+             if (!vehicle) throw new Error("Impossible de récupérer le véhicule " + vehicleId)
             const vehicleDto: VehicleDTO = {
                 id: vehicle!.id, 
                 brand: vehicle!.brand,
