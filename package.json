@@ -12,7 +12,11 @@
   "scripts": {
     "test": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features",
     "build": "npx tsc", 
-    "fleet" : " node ./dist/src/App/index.js "
+    "exe" : " node ./dist/src/App/index.js ",
+    "vehicle" : " npm run exe -- create-vehicle -i 123456 -b toyota -m corrola -y 1986 -t car -lt 192.51 -lg 151.30",
+    "fleet" : "npm run exe -- create -i 123 -n MyFleet -lt 51.123 -lg -0.456",
+    "fleet-add" : "npm run exe -- register-vehicle -fi 123 -vi 123456"
+
   },
   "dependencies": {
     "commander": "^10.0.1",

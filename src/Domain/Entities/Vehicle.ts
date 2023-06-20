@@ -58,11 +58,13 @@ export default class Vehicle {
     this.currentLocations.setLongitude(longitude);
   }
 
-  public setMyFleets(newFleet: Fleet){
+  public setMyFleets(newFleet: Fleet):string{
     // Si la  nouvelle flotte n'exite pas dans les flottes du véhicules on l'ajoute
     if (this.myFleets.filter(f => f.getId() === newFleet.getId()).length < 1) {
       this.myFleets.push(newFleet)
+      return newFleet.getId() ; 
     }
+    return "" ; 
   }
 
 

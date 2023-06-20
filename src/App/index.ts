@@ -103,7 +103,7 @@ async function handleCommand(command:string, options:any) {
       // Céer un vehicule
       console.log("options", options);
       
-      await addVehicle(options.id, options.brand, options.model, options.year, options.type, options.lat, options.longitude);
+      await addVehicle(options.id, options.brand, options.model, options.year, options.type, options.latitude, options.longitude);
       process.exit(0);
 
     default:

@@ -5,7 +5,7 @@ export default interface VehicleDTO {
     brand: string;
     model: string;
     year: string;
-    fleets: Array<FleetDTO>;
+    fleets: Array<string>;
     type:string;
     currentLocations :  {latitude: number, longitude:number}
   }
