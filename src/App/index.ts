@@ -4,6 +4,7 @@ import Fleet from '../Domain/Entities/Fleet';
 import { createFleet } from './commands/CreateFleetCommand';
 import { registerVehicle } from './commands/AddVehicleCommand';
 import { addVehicle} from './commands/CreateVehicleCommand'
+import { localizeVehicle } from './Querries/GetVehicle';
 
 
 const program = new Command();
@@ -49,25 +50,23 @@ program
   });
 
 
-  //Localiser un Véhicule
+// Localiser un vehicule
 program
-  .command('localize-vehicle <fleetId> <vehiclePlateNumber> <lat> <lng> [alt]')
+  .command('localize-vehicle')
   .description('Localize a vehicle')
-  .action((fleetId, vehiclePlateNumber, lat, lng, alt) => {
-    handleCommand('localize-vehicle', { fleetId, vehiclePlateNumber, lat, lng, alt });
+  .requiredOption('-vi, --vehicle <vehicleId>', 'Vehicle id')
+  .action(async(options) => {
+    await handleCommand('localize-vehicle', options);
   });
 
 
-program
-  .command('add-vehicle <fleetId> <vehiclePlateNumber> <lat> <lng> [alt]')
-  .description('Localize a vehicle')
-  .action((fleetId, vehiclePlateNumber, lat, lng, alt) => {
-    handleCommand('localize-vehicle', { fleetId, vehiclePlateNumber, lat, lng, alt });
-  });
 
 program.parse(process.argv);
 
 async function handleCommand(command:string, options:any) {
+  
+  console.log("options", options);
+
   switch (command) {
     case 'create':
       console.log('commande create');
@@ -94,15 +93,13 @@ async function handleCommand(command:string, options:any) {
       //console.log(`Véhicule ${options.vehicle} est ajouté à la flotte ${options.fleet}`);
       process.exit(0);
 
-    // case 'localize-vehicle':
-    //   localiser un véhicule dans une flotte
-    //   localizeVehicle(options.fleetId, options.vehiclePlateNumber, options.lat, options.lng, options.alt);
-    //   break;
+    case 'localize-vehicle':
+      //localiser un véhicule dans une flotte
+      console.log(await localizeVehicle(options.vehicle));
+      process.exit(0);
 
     case 'create-vehicle':
       // Céer un vehicule
-      console.log("options", options);
-      
       await addVehicle(options.id, options.brand, options.model, options.year, options.type, options.latitude, options.longitude);
       process.exit(0);
 
