@@ -57,6 +57,5 @@ Then('I should be informed this this vehicle has already been registered into my
 ////
 Given('this vehicle has been registered into the other user\'s fleet', function () {
   const msg : string = this.otherFleet.addVehicle(myVehcile);
-  console.log("myVehcile fleet", myVehcile.getMyFleets() );
    assert.deepStrictEqual(msg, "ok");
 });

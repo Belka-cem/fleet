@@ -6,6 +6,15 @@ export default class MongoDB {
     private url?: string;
     private client?: MongoClient;
     private db?: Db ; 
+    private isConnected = false ; 
+
+    getState (): boolean {
+      return this.isConnected ; 
+    }
+
+    private setState (state:boolean) {
+       this.isConnected= state ; 
+    }
   
 
     private async connect(): Promise<void> {
@@ -14,8 +23,10 @@ export default class MongoDB {
         this.client = new MongoClient (this.url!);
         this.db = this.client.db(process.env.DB_NAME);
         console.log('Connexion réussie à MongoDB');
+        this.setState(true);
       } catch (error) {
         console.error('Erreur lors de la connexion à MongoDB :', error);
+        this.setState(false);
         throw error;
       }
     }
@@ -29,6 +40,7 @@ export default class MongoDB {
           this.url = !process.env.DB_CONN_STRING ? "" : process.env.DB_CONN_STRING; 
           this.connect();
         }
+
         return this.db!;
       } catch (error) {
         console.error('Erreur lors de la connexion à MongoDB :', error);
