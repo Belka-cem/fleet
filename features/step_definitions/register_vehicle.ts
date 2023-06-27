@@ -38,15 +38,18 @@ Given('a non-existing vehicle with ID {string}', function (id:string) {
 
 When('I register the non-existing vehicle in the fleet', async function () {
   
-    this.result = () => {
-      registerVehicle(fleetId, vehicleId);
+    this.result = async () => {
+      await registerVehicle(fleetId, vehicleId);
     } 
 });
 
-Then('the registration should fail', function () {
-
-  assert.throws(async() => {
-    // pourapturer l'erreur
-   await this.result();
-  }, Error);
+Then('the registration should fail', async function () {
+  try {
+    await this.result();
+    // Si aucune erreur n'est levée, nous lançons une AssertionError
+    assert.fail('Expected an error to be thrown');
+  } catch (error) {
+    // Vérifier que l'erreur est bien de type Error
+    assert.ok(error instanceof Error);
+  }
 });
