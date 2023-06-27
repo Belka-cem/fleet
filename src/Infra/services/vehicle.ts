@@ -47,7 +47,7 @@ export default class VehicleServiceBDD {
             const vehicle = await this.fleetCollection.findOne(query) ;
             //console.log("vehicle", vehicle);
             
-             if (!vehicle) throw new Error("Impossible de récupérer le véhicule " + vehicleId)
+             if (!vehicle) throw new Error("Impossible de récupérer le véhicule " + vehicleId )
             const vehicleDto: VehicleDTO = {
                 id: vehicle!.id, 
                 brand: vehicle!.brand,

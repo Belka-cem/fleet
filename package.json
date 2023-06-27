@@ -10,7 +10,8 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "test": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features",
+    "test": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features  --tags \"@prod\"",
+    "test-dev": "npx tsc && ncp ./features/scenarios ./dist/features && cucumber-js dist/features",
     "build": "npx tsc", 
     "exe" : "node ./dist/src/App/index.js ",
     "vehicle" : "npm run exe -- create-vehicle -i 123456 -b toyota -m corrola -y 1986 -t car -lt 192.51 -lg 151.30",

@@ -17,11 +17,18 @@ export default class MongoDB {
     }
   
 
-    private async connect(): Promise<void> {
+    private async connect(db_name?: string ): Promise<void> {
+      // Bdd par defaut 
+      const defaultBdd: string = !process.env.DB_NAME ? "FleetDb" : process.env.DB_NAME 
+
+      //Une bdd passée paramètre ? sinon on utilise celle par défaut
+      db_name = !db_name ?  defaultBdd : db_name
       try {
         //this.client = await MongoClient.connect(this.url);
         this.client = new MongoClient (this.url!);
-        this.db = this.client.db(process.env.DB_NAME);
+        this.db = this.client.db(db_name ? db_name : "FleetDb");
+
+
         console.log('Connexion réussie à MongoDB');
         this.setState(true);
       } catch (error) {
@@ -31,14 +38,14 @@ export default class MongoDB {
       }
     }
   
-    async getDb(): Promise<Db> {
+    async getDb(db_name?:string ): Promise<Db> {
 
       try {
         // Singleton sur la connexion 
         if (!this.db) {
           dotenv.config();
           this.url = !process.env.DB_CONN_STRING ? "" : process.env.DB_CONN_STRING; 
-          this.connect();
+          this.connect(db_name);
         }
 
         return this.db!;
@@ -47,6 +54,18 @@ export default class MongoDB {
         throw error;
       }
       
+    }
+
+     async testConnexion () : Promise<boolean> {
+
+      try {
+        const res = await this.db!.collection("startup_log").find().toArray();
+        if(!res) return false ;
+        return true ;
+      } catch (error) {
+        throw error;
+      }
+
     }
   
     private async disconnect(): Promise<void> {
