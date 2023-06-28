@@ -11,13 +11,10 @@ export async function createFleet(fleet:Fleet) {
         name: fleet.getName(),
         vehicles: [],
         locations : {longitude: fleet.getLocation().getLongitude(), latitude: fleet.getLocation().getLatitude() }
-
       }
-      console.log("fleetDTo createFleet",fleetDTo.locations);
-      
+
       const db = await new MongoDB().getDb() ; 
       const fleetServiceBdd = new FleetServiceBDD(db); 
       const idFleet = await fleetServiceBdd.addFleet(fleetDTo);
-      console.log("idFleet ok", idFleet); 
       return idFleet;
   }

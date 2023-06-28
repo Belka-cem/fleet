@@ -27,9 +27,7 @@ export default class VehicleServiceBDD {
 
     async updateVehicle(vehicle:VehicleDTO):Promise<void> {
         try {
-            console.log("updateVehicle","vehicle",  vehicle);
             const result = await this.fleetCollection.updateOne({id: vehicle.id}, {"$set" :vehicle});
-            console.log("updateVehicle", "result", result);
             if(!result) throw new Error("Error lors de la maj du véhicule : " + vehicle.id)
             
         } catch (error) {
@@ -59,7 +57,6 @@ export default class VehicleServiceBDD {
             }        
             return vehicleDto;
         } catch (error) {
-            console.log(error);
             throw error;
         }
         

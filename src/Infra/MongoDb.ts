@@ -27,9 +27,6 @@ export default class MongoDB {
         //this.client = await MongoClient.connect(this.url);
         this.client = new MongoClient (this.url!);
         this.db = this.client.db(db_name ? db_name : "FleetDb");
-
-
-        console.log('Connexion réussie à MongoDB');
         this.setState(true);
       } catch (error) {
         console.error('Erreur lors de la connexion à MongoDB :', error);
@@ -50,7 +47,6 @@ export default class MongoDB {
 
         return this.db!;
       } catch (error) {
-        console.error('Erreur lors de la connexion à MongoDB :', error);
         throw error;
       }
       

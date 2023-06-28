@@ -37,7 +37,6 @@ export async function registerVehicle(fleetId: string, vehicleId: string): Promi
   // On récupère l'id des vehicules 
   const tabIdvehicles = fleet.getVehicles().map(v => v.getId()); 
   fleetDto.vehicles = [...tabIdvehicles];
-  console.log("array fleetDto", fleetDto.vehicles );
   
   //Maj Bdd Fleet
   await fleetServiceBdd.addVehicle(fleetDto);
@@ -50,7 +49,7 @@ export async function registerVehicle(fleetId: string, vehicleId: string): Promi
   const resuSetMyfleet = vehicle.setMyFleets(fleet)
   const tabIdFleet = vehicle.getMyFleets().map(f => f.getId()); 
   if (resuSetMyfleet === "") vehicleDto.fleets = [...tabIdFleet]
-  console.log("array vehicleDto", vehicleDto.fleets);
+
   //Maj Bdd Vehicle
   await vehicleServiceBdd.updateVehicle(vehicleDto);
 

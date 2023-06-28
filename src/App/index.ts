@@ -65,12 +65,9 @@ program.parse(process.argv);
 
 async function handleCommand(command:string, options:any) {
   
-  console.log("options", options);
-
   switch (command) {
     case 'create':
-      console.log('commande create');
-      
+    
       let { id, name, latitude, longitude } = options;
      
       //Optionnel
@@ -81,10 +78,8 @@ async function handleCommand(command:string, options:any) {
 
       //Init Fleet
       const fleet = new Fleet(id, name, latitude, longitude );
-      console.log('new fleet ok', fleet.getLocation());
       //AJout de la flote à la bdd
       const idFleet = await createFleet(fleet);
-      console.log("id fleet : ", idFleet); 
       process.exit(0);
 
     case 'register-vehicle':
@@ -95,7 +90,6 @@ async function handleCommand(command:string, options:any) {
 
     case 'localize-vehicle':
       //localiser un véhicule dans une flotte
-      console.log(await localizeVehicle(options.vehicle));
       process.exit(0);
 
     case 'create-vehicle':

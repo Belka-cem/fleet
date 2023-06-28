@@ -20,12 +20,8 @@ export default class FleetServiceBDD {
         //const collections: { fleetC: Collection } = fleet ;
         try {
             const result = await this.fleetCollection.insertOne(fleet);
-            
-            console.log("result", result);
-            
             return fleet.id;
         } catch (error) {
-            //console.log(error);
             throw error;
         }
         
@@ -46,7 +42,6 @@ export default class FleetServiceBDD {
             }        
             return fleetDto;
         } catch (error) {
-            console.log(error);
             throw error;
         }
         
@@ -55,24 +50,12 @@ export default class FleetServiceBDD {
     async addVehicle(fleetDto:FleetDTO ){
 
         try {
-            // si le véhicule n'est pas nul on considère qu'il faut l'ajouter à la flotte
-            // if (vehicleDto){
- 
-            //     fleetDto.vehicles = [...fleetDto.vehicles, vehicleDto]; 
-            // } 
             const query = { id: fleetDto.id };
-            console.log('query', query, fleetDto.vehicles);
-            
-            
             const res = await this.fleetCollection.updateOne(query, {"$set":{vehicles:fleetDto.vehicles}}) ;
-            console.log("res", res);
-            
             if (!res) throw new Error("Problème lors de l'ajout du véhicule");
      
         } catch (error) {
-            console.log(error);
             throw error;
-        }
-        
+        }   
     }
 }
