@@ -7,6 +7,7 @@ import FleetServiceBDD from "../../Infra/services/fleet";
 import VehicleServiceBDD from '../../Infra/services/vehicle';
 import { addVehicle } from './CreateVehicleCommand';
 import { log } from 'console';
+import VehicleDTO from '../../Infra/DTO/vehicle.dto';
 
 
 //  enregistrer un véhicule dans une flotte
@@ -15,19 +16,19 @@ export async function registerVehicle(fleetId: string, vehicleId: string): Promi
 
   // On vérifie d'abbord que le véhicule existe
   const vehicleServiceBdd = new VehicleServiceBDD(db);
-  let vehicleDto = await vehicleServiceBdd.getVehicle(vehicleId);
+  let vehicleDto : VehicleDTO | null = await vehicleServiceBdd.getVehicle(vehicleId);
 
+  if (!vehicleDto) return "-1";
   const vehicle = Vehicle.createDefault(vehicleDto);
-  if (!vehicle.getId()) return "-1";
 
   // On récupère la flotte 
   const fleetServiceBdd = new FleetServiceBDD(db);
-  let fleetDto : FleetDTO  ; 
+  let fleetDto : FleetDTO | null  ; 
    fleetDto = await fleetServiceBdd.getFleet(fleetId);
+   if (!fleetDto) return "-2";
   const fleet = Fleet.createDefault(fleetDto);
   console.log('fleet id ' + fleet.getId());
   
-  if (!fleet.getId()) return "-2";
 
   // On vérifie que le véhicule n'existe pas dans la flotte
   const idVehicle = fleet.findVehicleById(vehicle);

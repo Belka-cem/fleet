@@ -21,7 +21,7 @@ export async function addVehicle(id: string, brand: string, model: string, year:
 
     // Insertion en bdd
     const vehicleServiceBDD: VehicleServiceBDD = new VehicleServiceBDD(db);
-    const vehicleId = await vehicleServiceBDD.addVehcile(vehicleDto); 
+    const vehicleId = await vehicleServiceBDD.addVehicle(vehicleDto); 
 
     return vehicleId;
 }

@@ -7,5 +7,6 @@ export async function localizeVehicle(vehicleId: string){
     const vehicleServiceBdd = new VehicleServiceBDD(db);
     let vehicleDto = await vehicleServiceBdd.getVehicle(vehicleId);
 
+    if (!vehicleDto) throw new Error("getVehicle empty")
     return vehicleDto.currentLocations
 }
