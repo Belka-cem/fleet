@@ -25,6 +25,8 @@ export async function registerVehicle(fleetId: string, vehicleId: string): Promi
   let fleetDto : FleetDTO  ; 
    fleetDto = await fleetServiceBdd.getFleet(fleetId);
   const fleet = Fleet.createDefault(fleetDto);
+  console.log('fleet id ' + fleet.getId());
+  
   if (!fleet.getId()) return "-2";
 
   // On vérifie que le véhicule n'existe pas dans la flotte

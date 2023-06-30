@@ -1,55 +1,108 @@
-Vehicle Fleet Management CLI
-This is a command-line interface (CLI) application for managing a vehicle fleet and tracking the location of each vehicle. It exposes the functionality of the fleet management system to the world.
+# Fleet Management CLI
 
-Installation
-To install the application, make sure you have Node.js and npm (Node Package Manager) installed on your machine. Then, follow these steps:
+This is a command-line interface (CLI) application for managing a vehicle fleet. It allows you to create fleets, register vehicles to fleets, and localize vehicles by their fleet and plate number.
 
-Clone the repository: git clone <repository-url>
-Navigate to the project directory: cd vehicle-fleet-management-cli
-Install the dependencies: npm install
-Usage
+## Prerequisites:
+
+ - To use this project properly, you'll need a MongoDb database.
+ - An .env file must be created with the MongoDB connection information:
+
+```dotenv
+# ex .env
+DB_CONN_STRING="mongodb://admin:fleet@localhost:27017/"
+DB_NAME="FleetDb"
+```
+Connection String: mongodb://admin:fleet@localhost:27017/
+Database name: FleetDb
+
+If you don't have Mongo Db at your disposal, a docker-compose file will enable you to launch a service with a MongoDb database and a web client to manage the data stored in this database.
+
+- To use this service, you must have docker installed on your machine.
+- Open a terminal or command line in this directory.
+- Run the following command to start the containers defined in the docker-compose.yml file:
+
+```bash
+docker-compose up -d
+```
+
+## Installation
+
+
+1. Install the dependencies using the following command:
+
+```bash
+npm install
+```
+2. Build the project
+
+```bash
+npx tsc
+```
+
+## Usage
+
 The CLI provides the following commands:
 
-Create a Fleet
-To create a fleet, use the following command:
+### Create Fleet
 
-bash
-Copy code
-./fleet create <userId>
-Replace <userId> with the unique identifier of the user. This command returns the fleet ID on the standard output.
+Create a new fleet.
 
-Register a Vehicle
-To register a vehicle to a fleet, use the following command:
+```bash
+npm run create <userId> [name] [latitude] [longitude]
+```
 
-js
-Copy code
-./fleet register-vehicle <fleetId> <vehiclePlateNumber>
-Replace <fleetId> with the ID of the fleet and <vehiclePlateNumber> with the plate number of the vehicle.
+--id <id>: User ID (required).
+--name <name>: Fleet name (optional).
+--latitude <latitude>: Latitude location (optional).
+--longitude <longitude>: Longitude location (optional).
 
-Localize a Vehicle
-To track the location of a vehicle in a fleet, use the following command:
+Exemple :
 
-js
-Copy code
-./fleet localize-vehicle <fleetId> <vehiclePlateNumber> <latitude> <longitude> [altitude]
-Replace <fleetId> with the ID of the fleet, <vehiclePlateNumber> with the plate number of the vehicle, <latitude> with the latitude of the vehicle's location, <longitude> with the longitude of the vehicle's location, and [altitude] (optional) with the altitude of the vehicle's location.
+```bash
+npm run create create 123456 "Ma flotte" 43.296174 5.369953
+```
 
-Scripts
-The following scripts are available for development and testing:
+### Register Vehicle
 
-npm test: Runs the tests using Cucumber with production tags.
-npm run test-dev: Runs the tests using Cucumber without any tags.
-npm run build: Transpiles the TypeScript code to JavaScript.
-npm run exe: Executes the transpiled code.
-npm run vehicle: Runs the command to create a vehicle.
-npm run fleet: Runs the command to create a fleet.
-npm run fleet-add: Runs the command to register a vehicle to a fleet.
-npm run localize-vehicle: Runs the command to localize a vehicle in a fleet.
-Dependencies
-This project uses the following dependencies:
+Register a vehicle to a fleet.
 
-commander: For command-line option parsing.
-dotenv: For loading environment variables from a .env file.
-mongodb: The official MongoDB driver for Node.js.
-License
-This project is licensed under the proprietary license.
+```bash
+npm run register-vehicle <fleetId> <vehiclePlateNumber>
+```
+
+--id <fleetId>: Fleet ID (required).
+--name <vehiclePlateNumber>: Vehicle Id (required).
+
+Exemple : 
+
+```bash
+npm run register-vehicle  register-vehicle "123" "ABC123"
+
+```
+
+### Locate a Vehicle
+
+To find the location of a vehicle within a fleet, use the following command:
+
+```bash
+npm run localize-vehicle <vehiclePlateNumber>
+```
+
+--id <fleetId>: Fleet ID (required).
+--name <vehiclePlateNumber>: Vehicle Id (required).
+
+Exemple : 
+
+```bash
+npm run localize-vehicle "ABC123"
+
+```
+
+## Running Tests
+
+You can execute tests for this project using the following command:
+
+```bash
+npm run test"
+
+```

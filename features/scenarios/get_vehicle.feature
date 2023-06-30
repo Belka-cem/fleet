@@ -2,7 +2,7 @@ Feature: Localize Vehicle
 
   @prod
   Scenario: Localize an existing vehicle
-    Given I have a vehicle with ID "1230000"
+    Given I have a vehicle with ID "123456"
     When I attempt to localize the vehicle
     Then the vehicle should be localized
 
